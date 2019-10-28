@@ -1,6 +1,7 @@
 package org.wahlzeit.model;
 
 import java.lang.Math;
+import java.util.Objects;
 
 public class Coordinate {
 
@@ -88,5 +89,10 @@ public class Coordinate {
     @Override
     public boolean equals(Object o) {
         return this.isEqual((Coordinate) o);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 }
