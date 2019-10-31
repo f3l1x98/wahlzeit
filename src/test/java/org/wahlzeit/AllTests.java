@@ -27,5 +27,4 @@ import org.wahlzeit.utils.*;
         TellFriendTest.class
 })
 public class AllTests {
-
 }
