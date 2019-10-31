@@ -15,7 +15,7 @@ import org.wahlzeit.utils.*;
         VersionTest.class,
         EmailAddressTest.class,
         LogBuilderTest.class,
-        EmailServiceTest.class,
+        EmailServiceTestSuite.class,
         AccessRightsTest.class,
         CoordinateTest.class,
         FlagReasonTest.class,
