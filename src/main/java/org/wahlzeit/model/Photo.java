@@ -122,7 +122,7 @@ public class Photo extends DataObject {
 	 */
 	protected String ending = "jpg";
 
-	public Location location;
+	protected Location location;
 	
 	/**
 	 *
