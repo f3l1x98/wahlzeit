@@ -25,6 +25,7 @@ public class WaterfallPhoto extends Photo {
         if(stages < 1)
             throw new IllegalArgumentException("A Waterfall has at least one stage!");
         this.stages = stages;
+        incWriteCount();
     }
 
     public boolean isEqual(WaterfallPhoto that) {
