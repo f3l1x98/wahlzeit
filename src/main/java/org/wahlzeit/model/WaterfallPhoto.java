@@ -1,7 +1,10 @@
 package org.wahlzeit.model;
 
+import com.googlecode.objectify.annotation.Entity;
+
 import java.util.Objects;
 
+@Entity
 public class WaterfallPhoto extends Photo {
 
     /**

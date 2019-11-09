@@ -33,7 +33,7 @@ public class WaterfallPhotoFactory extends PhotoFactory {
     public static synchronized WaterfallPhotoFactory getInstance() {
         if (instance == null) {
             log.config(LogBuilder.createSystemMessage().addAction("setting generic WaterfallPhotoFactory").toString());
-            setInstance(new PhotoFactory());
+            setInstance(new WaterfallPhotoFactory());
         }
 
         return instance;
@@ -50,8 +50,6 @@ public class WaterfallPhotoFactory extends PhotoFactory {
         instance = photoFactory;
     }
 
-    // TODO instance init -> no idea how exactly
-
     @Override
     public WaterfallPhoto createPhoto() {
         return new WaterfallPhoto();
@@ -65,15 +63,5 @@ public class WaterfallPhotoFactory extends PhotoFactory {
     @Override
     public WaterfallPhoto loadPhoto(PhotoId id) {
         return null;
-    }
-
-    @Override
-    public PhotoFilter createPhotoFilter() {
-        return super.createPhotoFilter();
-    }
-
-    @Override
-    public PhotoTagCollector createPhotoTagCollector() {
-        return super.createPhotoTagCollector();
     }
 }

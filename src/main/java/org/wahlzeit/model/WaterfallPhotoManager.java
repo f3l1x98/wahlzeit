@@ -1,6 +1,8 @@
 package org.wahlzeit.model;
 
 
+import com.google.appengine.api.images.Image;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -25,6 +27,8 @@ public class WaterfallPhotoManager extends PhotoManager {
     public WaterfallPhotoManager() {
         photoTagCollector = WaterfallPhotoFactory.getInstance().createPhotoTagCollector();
     }
+
+
 
     @Override
     public WaterfallPhoto getPhotoFromId(PhotoId id) {
@@ -52,7 +56,14 @@ public class WaterfallPhotoManager extends PhotoManager {
 
     @Override
     public WaterfallPhoto getVisiblePhoto(PhotoFilter filter) {
-        filter.generateDisplayablePhotoIds();
-        return getPhotoFromId(filter.getRandomDisplayablePhotoId());
+        return (WaterfallPhoto) super.getVisiblePhoto(filter);
+    }
+
+    @Override
+    public WaterfallPhoto createPhoto(String filename, Image uploadedImage) throws Exception {
+        PhotoId id = PhotoId.getNextId();
+        WaterfallPhoto result = (WaterfallPhoto) PhotoUtil.createPhoto(filename, id, uploadedImage);
+        addPhoto(result);
+        return result;
     }
 }
