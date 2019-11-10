@@ -65,7 +65,6 @@ public class WaterfallPhotoManagerTest {
 
             assertNotNull(photo);
             assertEquals(photo.getClass(), WaterfallPhoto.class);
-            assertEquals(photo.getId().asInt(), 1);
         } catch (Exception e) {
             e.printStackTrace();
             assertTrue(false);      // if this fails, it means an exception was thrown (which shouldn't happen)
