@@ -14,10 +14,12 @@ public class WaterfallPhoto extends Photo {
 
     public WaterfallPhoto() {
         super();
+        this.stages = 1;
     }
 
     public WaterfallPhoto(PhotoId myId) {
         super(myId);
+        this.stages = 1;
     }
 
     public int getStages() {
