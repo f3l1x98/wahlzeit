@@ -53,6 +53,22 @@ public class PhotoUtil {
 	}
 
 	/**
+	 * @methodtype creation
+	 */
+	public static WaterfallPhoto createWaterfallPhoto(String filename, PhotoId id, Image uploadedImage) throws Exception {
+		WaterfallPhoto result = WaterfallPhotoFactory.getInstance().createPhoto(id);
+		result.setEnding(filename.substring(filename.lastIndexOf(".") + 1));
+
+		createImageFiles(uploadedImage, result);
+
+		int sourceWidth = uploadedImage.getWidth();
+		int sourceHeight = uploadedImage.getHeight();
+		result.setWidthAndHeight(sourceWidth, sourceHeight);
+
+		return result;
+	}
+
+	/**
 	 *
 	 */
 	public static void createImageFiles(Image source, Photo photo) throws Exception {

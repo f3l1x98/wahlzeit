@@ -2,7 +2,12 @@ package org.wahlzeit.model;
 
 
 import com.google.appengine.api.images.Image;
+import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Work;
+import org.wahlzeit.services.LogBuilder;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,22 +22,18 @@ public class WaterfallPhotoManager extends PhotoManager {
     private static final Logger log = Logger.getLogger(WaterfallPhotoManager.class.getName());
 
     /**
-     * In-memory cache for photos
-     */
-    protected Map<PhotoId, WaterfallPhoto> photoCache = new HashMap<>();
-
-    /**
      *
      */
     public WaterfallPhotoManager() {
         photoTagCollector = WaterfallPhotoFactory.getInstance().createPhotoTagCollector();
     }
 
-
+    public static WaterfallPhotoManager getInstance() {
+        return instance;
+    }
 
     @Override
     public WaterfallPhoto getPhotoFromId(PhotoId id) {
-        //return super.getPhotoFromId(id); //TODO not sure if that can be used
         if (id == null) {
             return null;
         }
@@ -50,8 +51,34 @@ public class WaterfallPhotoManager extends PhotoManager {
     }
 
     @Override
+    public void loadPhotos() {
+        Collection<WaterfallPhoto> existingPhotos = ObjectifyService.run(new Work<Collection<WaterfallPhoto>>() {
+            @Override
+            public Collection<WaterfallPhoto> run() {
+                Collection<WaterfallPhoto> existingPhotos = new ArrayList<>();
+                readObjects(existingPhotos, WaterfallPhoto.class);
+                return existingPhotos;
+            }
+        });
+
+        for (WaterfallPhoto photo : existingPhotos) {
+            if (!doHasPhoto(photo.getId())) {
+                log.config(LogBuilder.createSystemMessage().
+                        addParameter("Load WaterfallPhoto with ID", photo.getIdAsString()).toString());
+                loadScaledImages(photo);
+                doAddPhoto(photo);
+            } else {
+                log.config(LogBuilder.createSystemMessage().
+                        addParameter("Already loaded WaterfallPhoto", photo.getIdAsString()).toString());
+            }
+        }
+
+        log.info(LogBuilder.createSystemMessage().addMessage("All photos loaded.").toString());
+    }
+
+    @Override
     protected WaterfallPhoto doGetPhotoFromId(PhotoId id) {
-        return photoCache.get(id);
+        return (WaterfallPhoto) super.doGetPhotoFromId(id);
     }
 
     @Override
@@ -62,7 +89,7 @@ public class WaterfallPhotoManager extends PhotoManager {
     @Override
     public WaterfallPhoto createPhoto(String filename, Image uploadedImage) throws Exception {
         PhotoId id = PhotoId.getNextId();
-        WaterfallPhoto result = (WaterfallPhoto) PhotoUtil.createPhoto(filename, id, uploadedImage);
+        WaterfallPhoto result = PhotoUtil.createWaterfallPhoto(filename, id, uploadedImage);
         addPhoto(result);
         return result;
     }
