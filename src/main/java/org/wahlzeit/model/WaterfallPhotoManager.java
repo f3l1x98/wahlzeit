@@ -14,22 +14,13 @@ import java.util.logging.Logger;
 
 public class WaterfallPhotoManager extends PhotoManager {
 
-    /**
-     *
-     */
-    protected static final WaterfallPhotoManager instance = new WaterfallPhotoManager();
-
     private static final Logger log = Logger.getLogger(WaterfallPhotoManager.class.getName());
 
     /**
      *
      */
     public WaterfallPhotoManager() {
-        photoTagCollector = WaterfallPhotoFactory.getInstance().createPhotoTagCollector();
-    }
-
-    public static WaterfallPhotoManager getInstance() {
-        return instance;
+        super();
     }
 
     @Override
@@ -89,7 +80,7 @@ public class WaterfallPhotoManager extends PhotoManager {
     @Override
     public WaterfallPhoto createPhoto(String filename, Image uploadedImage) throws Exception {
         PhotoId id = PhotoId.getNextId();
-        WaterfallPhoto result = PhotoUtil.createWaterfallPhoto(filename, id, uploadedImage);
+        WaterfallPhoto result = (WaterfallPhoto) PhotoUtil.createPhoto(filename, id, uploadedImage);
         addPhoto(result);
         return result;
     }

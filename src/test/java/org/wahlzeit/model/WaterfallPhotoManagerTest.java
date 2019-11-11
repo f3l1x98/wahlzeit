@@ -35,12 +35,30 @@ public class WaterfallPhotoManagerTest {
     }
 
     @Test
+    public void testHasPhoto() {
+        Photo photo;
+
+        try {
+            Image image = getFirstImage();
+            WaterfallPhotoManager wm = (WaterfallPhotoManager) WaterfallPhotoManager.getInstance();
+            photo = wm.createPhoto("BLABLABLUB", image);
+
+            boolean ret = wm.hasPhoto(photo.getId());
+
+            assertTrue(ret);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
     public void testGetPhotoFromID() {
         Photo photo;
 
         try {
             Image image = getFirstImage();
-            WaterfallPhotoManager wm = WaterfallPhotoManager.getInstance();
+            WaterfallPhotoManager wm = (WaterfallPhotoManager) WaterfallPhotoManager.getInstance();
             photo = wm.createPhoto("BLABLABLUB", image);
 
             Photo ret = wm.getPhotoFromId(photo.getId());
