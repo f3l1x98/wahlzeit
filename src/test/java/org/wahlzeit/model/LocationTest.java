@@ -14,7 +14,7 @@ public class LocationTest {
 
     @Test
     public void testValidConstrucot() {
-        Location newLocation = new Location(new Coordinate(1, 2, 3));
+        Location newLocation = new Location(new CartesianCoordinate(1, 2, 3));
 
         assertNotEquals(newLocation.coordinate, null);
     }
