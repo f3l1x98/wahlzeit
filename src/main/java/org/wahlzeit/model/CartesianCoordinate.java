@@ -3,7 +3,7 @@ package org.wahlzeit.model;
 import java.lang.Math;
 import java.util.Objects;
 
-public class CartesianCoordinate implements Coordinate {
+public class CartesianCoordinate extends AbstractCoordinate {
 
     private double x;
 
@@ -63,39 +63,20 @@ public class CartesianCoordinate implements Coordinate {
     }
 
     @Override
-    public CartesianCoordinate asCartesianCoordinate() {
-        return this;
-    }
-
-    /**
-     * Calculate Distance between itself and the given CartesianCoordinate
-     * @param coordinate CartesianCoordinate the distance has to be calculated  towards
-     * @return euclidean Distance in double
-     */
-    @Override
-    public double getCartesianDistance(Coordinate coordinate) {
-        CartesianCoordinate coord = coordinate.asCartesianCoordinate();
-        return Math.sqrt(
-                Math.pow((this.x - coord.getX()), 2) + Math.pow((this.y - coord.getY()), 2) + Math.pow((this.z - coord.getZ()), 2)
-        );
-    }
-
-    @Override
     public SphericCoordinate asSphericCoordinate() {
         double radius = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
-        double theta = Math.acos(
+        double phi = Math.acos(
                 this.z / radius
         );
-        double phi = Math.asin(
-                this.y / Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2))
+        double theta = Math.atan(
+                this.y / this.x
         );
-        return new SphericCoordinate(phi, theta, radius);
-    }
 
-    @Override
-    public double getCentralAngle(Coordinate coordinate) {
-        SphericCoordinate coord = coordinate.asSphericCoordinate();
-        return coord.getCentralAngle(coord);    // TODO test
+        // in case x is 0
+        if(Double.isNaN(theta))
+            theta = 0;
+
+        return new SphericCoordinate(phi, theta, radius);
     }
 
     /**
@@ -105,6 +86,7 @@ public class CartesianCoordinate implements Coordinate {
      */
     @Override
     public boolean isEqual(Coordinate coordinate) {
+        if(coordinate == null) return false;
         CartesianCoordinate coord = coordinate.asCartesianCoordinate();
         if (this == coord) return true;
         if (coord == null || this.getClass() != coord.getClass()) return false;

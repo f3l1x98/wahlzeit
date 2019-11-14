@@ -1,8 +1,8 @@
 package org.wahlzeit.model;
 
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CartesianCoordinateTest {
@@ -34,6 +34,13 @@ public class CartesianCoordinateTest {
 
     @Test
     public void testAsSphericCoordinate() {
-        throw new NotImplementedException();
+        CartesianCoordinate cartesianCoordinate = new CartesianCoordinate(0, 0, 1);
+        CartesianCoordinate cartesianCoordinate2 = new CartesianCoordinate(3, 4, 5);
+
+        SphericCoordinate coordinate = cartesianCoordinate.asSphericCoordinate();
+        SphericCoordinate coordinate2 = cartesianCoordinate2.asSphericCoordinate();
+
+        assertEquals(coordinate, new SphericCoordinate(0,0,1));
+        assertEquals(coordinate2, new SphericCoordinate(0.7853981633974484, 0.9272952180016122, 7.0710678118654755));
     }
 }

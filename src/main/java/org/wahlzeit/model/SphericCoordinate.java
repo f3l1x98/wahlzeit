@@ -2,11 +2,17 @@ package org.wahlzeit.model;
 
 import java.util.Objects;
 
-public class SphericCoordinate implements Coordinate {
+public class SphericCoordinate extends AbstractCoordinate {
 
 
+    /**
+     * The angle in the around the z-axis in radians
+     */
     private double phi;
 
+    /**
+     * The angle in the x-y-plane in radians
+     */
     private double theta;
 
     private double radius;
@@ -64,30 +70,15 @@ public class SphericCoordinate implements Coordinate {
 
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
-        double x = this.radius * Math.sin(this.theta) * Math.cos(this.phi);
-        double y = this.radius * Math.sin(this.theta) * Math.sin(this.phi);
-        double z = this.radius * Math.cos(this.theta);
+        double x = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
+        double y = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
+        double z = this.radius * Math.cos(this.phi);
         return new CartesianCoordinate(x, y, z);
     }
 
     @Override
-    public double getCartesianDistance(Coordinate coordinate) {
-        CartesianCoordinate coord = coordinate.asCartesianCoordinate();
-        return this.getCartesianDistance(coord);    // TODO test
-    }
-
-    @Override
-    public SphericCoordinate asSphericCoordinate() {
-        return this;
-    }
-
-    @Override
-    public double getCentralAngle(Coordinate coordinate) {
-        return 0;
-    }
-
-    @Override
     public boolean isEqual(Coordinate coordinate) {
+        if(coordinate == null) return false;
         SphericCoordinate coord = coordinate.asSphericCoordinate();
         if (this == coord) return true;
         if (coord == null || this.getClass() != coord.getClass()) return false;

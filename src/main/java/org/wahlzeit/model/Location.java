@@ -5,12 +5,12 @@ public class Location {
     /**
      * Coordinates of the location
      */
-    public CartesianCoordinate coordinate;
+    public Coordinate coordinate;
 
     /**
      * @methodtype constructor
      */
-    public Location(CartesianCoordinate coordinate) {
+    public Location(Coordinate coordinate) {
         if(coordinate == null)
             throw new IllegalArgumentException("CartesianCoordinate must not be null!");
         this.coordinate = coordinate;
