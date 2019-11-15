@@ -79,6 +79,11 @@ public class CartesianCoordinate extends AbstractCoordinate {
         return new SphericCoordinate(phi, theta, radius);
     }
 
+    @Override
+    public CartesianCoordinate asCartesianCoordinate() {
+        return this;
+    }
+
     /**
      * equals method for this class
      * @param coordinate Object this object is to be compared with
@@ -90,14 +95,17 @@ public class CartesianCoordinate extends AbstractCoordinate {
         CartesianCoordinate coord = coordinate.asCartesianCoordinate();
         if (this == coord) return true;
         if (coord == null || this.getClass() != coord.getClass()) return false;
-        return Double.compare(coord.x, x) == 0 &&
-                Double.compare(coord.y, y) == 0 &&
-                Double.compare(coord.z, z) == 0;
+        return AbstractCoordinate.doubleCompare(coord.x, x) &&
+                AbstractCoordinate.doubleCompare(coord.y, y) &&
+                AbstractCoordinate.doubleCompare(coord.z, z);
     }
 
     @Override
     public boolean equals(Object o) {
-        return this.isEqual((CartesianCoordinate) o);
+        if(o instanceof Coordinate)
+            return this.isEqual((CartesianCoordinate) o);
+        else
+            return false;
     }
 
     @Override

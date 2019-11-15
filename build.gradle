@@ -39,7 +39,7 @@ dependencies {
     // https://cloud.google.com/appengine/docs/standard/java/release-notes
 
     providedCompile group: 'javax.servlet', name: 'servlet-api', version:'2.5'
-    compile 'com.google.appengine:appengine:+'
+    compile 'com.google.appengine:appengine:1.9.76'
 
     appengineSdk 'com.google.appengine:appengine-java-sdk:+'
 

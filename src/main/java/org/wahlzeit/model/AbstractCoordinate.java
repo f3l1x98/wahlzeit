@@ -4,11 +4,7 @@ public abstract class AbstractCoordinate implements Coordinate {
 
 
     @Override
-    public CartesianCoordinate asCartesianCoordinate() {
-        if(this.getClass() == CartesianCoordinate.class)
-            return (CartesianCoordinate) this;
-        return null;
-    }
+    public abstract CartesianCoordinate asCartesianCoordinate();
 
     /**
      * Calculate Distance between itself and the given CartesianCoordinate
@@ -31,11 +27,7 @@ public abstract class AbstractCoordinate implements Coordinate {
      * @return Coordinate converted to spheric Coordinate or null
      */
     @Override
-    public SphericCoordinate asSphericCoordinate() {
-        if(this.getClass() == SphericCoordinate.class)
-            return (SphericCoordinate) this;
-        return null;
-    }
+    public abstract SphericCoordinate asSphericCoordinate();
 
     @Override
     public double getCentralAngle(Coordinate coordinate) {
@@ -57,4 +49,10 @@ public abstract class AbstractCoordinate implements Coordinate {
 
     @Override
     public abstract boolean isEqual(Coordinate coordinate);
+
+
+    private static final double PRECISION = 1.0e-5;
+    protected static boolean doubleCompare(double d1, double d2) {
+        return Math.abs(d1 - d2) < PRECISION;
+    }
 }

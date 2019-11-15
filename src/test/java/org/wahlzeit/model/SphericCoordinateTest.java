@@ -12,9 +12,11 @@ public class SphericCoordinateTest {
     public void testEquals() {
         SphericCoordinate coord1 = new SphericCoordinate(1, 2, 3);
         SphericCoordinate coord2 = new SphericCoordinate(1.0, 2.0, 3.0);
+        SphericCoordinate coord3 = new SphericCoordinate((1.0 + (Math.PI * 2)), (2.0 + (Math.PI * 2) * 2), 3.0);
 
         assertTrue(coord1.isEqual(coord2));
         assertTrue(coord1.isEqual(coord1));
+        assertTrue(coord2.isEqual(coord3));
 
         assertTrue(coord1.equals(coord2));
         assertTrue(coord1.equals(coord1));
