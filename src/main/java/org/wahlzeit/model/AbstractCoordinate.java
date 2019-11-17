@@ -3,6 +3,9 @@ package org.wahlzeit.model;
 public abstract class AbstractCoordinate implements Coordinate {
 
 
+    /**
+     * @return Coordinate converted to CartesianCoordinate
+     */
     @Override
     public abstract CartesianCoordinate asCartesianCoordinate();
 
@@ -13,7 +16,7 @@ public abstract class AbstractCoordinate implements Coordinate {
      */
     @Override
     public double getCartesianDistance(Coordinate coordinate) {
-        if(coordinate == null) return Double.NaN;
+        if(coordinate == null) throw new IllegalArgumentException("Two points needed for calculation!");
         CartesianCoordinate thisCartesian = this.asCartesianCoordinate();
         CartesianCoordinate coord = coordinate.asCartesianCoordinate();
 
@@ -23,28 +26,27 @@ public abstract class AbstractCoordinate implements Coordinate {
     }
 
     /**
-     * Convert to sphericCoordinate (basic impl checks if the coordinate is already a spheric one and otherwise returns null)
-     * @return Coordinate converted to spheric Coordinate or null
+     * @return Coordinate converted to SphericCoordinate
      */
     @Override
     public abstract SphericCoordinate asSphericCoordinate();
 
+    /**
+     * Calculate central angle between the @param and this
+     * @param coordinate second coordinate
+     * @return central angle
+     */
     @Override
     public double getCentralAngle(Coordinate coordinate) {
-        if(coordinate == null) return Double.NaN;
+        if(coordinate == null) throw new IllegalArgumentException("Two points needed for calculation!");
         SphericCoordinate thisSpheric = this.asSphericCoordinate();
-        SphericCoordinate coord = coordinate.asSphericCoordinate();
+        SphericCoordinate thatSpheric = coordinate.asSphericCoordinate();
 
-        double dtheta = Math.abs(thisSpheric.getTheta() - coord.getTheta());
+        double dtheta = Math.abs(thisSpheric.getTheta() - thatSpheric.getTheta());
 
-        double numerator = Math.sqrt(
-                Math.pow((Math.cos(coord.getPhi() * Math.sin(dtheta))), 2) +
-                        Math.pow((Math.cos(thisSpheric.getPhi()) * Math.sin(coord.getPhi()) - Math.sin(thisSpheric.getPhi()) * Math.cos(coord.getPhi()) * Math.cos(dtheta / 2)), 2)
-        );
+        double cos = Math.sin(thisSpheric.getPhi()) * Math.sin(thatSpheric.getPhi()) + Math.cos(thisSpheric.getPhi()) * Math.cos(thatSpheric.getPhi()) * Math.cos(dtheta);
 
-        double denominator = Math.sin(thisSpheric.getPhi()) * Math.sin(coord.getPhi()) + Math.cos(thisSpheric.getPhi()) * Math.cos(coord.getPhi()) * Math.cos(dtheta);
-
-        return Math.atan(numerator / denominator);
+        return Math.acos(cos);
     }
 
     @Override

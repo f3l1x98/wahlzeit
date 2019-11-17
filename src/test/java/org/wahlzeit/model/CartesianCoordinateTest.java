@@ -3,20 +3,29 @@ package org.wahlzeit.model;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class CartesianCoordinateTest {
+
+    @Test
+    public void testIsEqual() {
+        CartesianCoordinate coord1 = new CartesianCoordinate(1, 2, 3);
+        CartesianCoordinate coord2 = new CartesianCoordinate(1, 2, 3);
+
+        assertTrue(coord1.isEqual(coord2));
+        assertTrue(coord1.isEqual(coord1));
+    }
 
     @Test
     public void testEquals() {
         CartesianCoordinate coord1 = new CartesianCoordinate(1, 2, 3);
         CartesianCoordinate coord2 = new CartesianCoordinate(1, 2, 3);
 
-        assertTrue(coord1.isEqual(coord2));
-        assertTrue(coord1.isEqual(coord1));
-
         assertTrue(coord1.equals(coord2));
         assertTrue(coord1.equals(coord1));
+        // make sure that there is no Nullpointerexception due to cast to same Coordinate type
+        assertFalse(coord1.equals(new Location(coord2)));
     }
 
     @Test
@@ -30,6 +39,13 @@ public class CartesianCoordinateTest {
         coord2 = new CartesianCoordinate(4, 5, 3);
 
         assertTrue(coord1.getCartesianDistance(coord2) == 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetCartesianDistanceNull() {
+        CartesianCoordinate coord1 = new CartesianCoordinate(1, 0, 0);
+
+        coord1.getCartesianDistance(null);
     }
 
     @Test
