@@ -1,4 +1,4 @@
-package org.wahlzeit.model;
+package org.wahlzeit.model.coordinates;
 
 import java.lang.Math;
 import java.util.Objects;

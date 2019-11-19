@@ -1,5 +1,7 @@
 package org.wahlzeit.model;
 
+import org.wahlzeit.model.coordinates.Coordinate;
+
 public class Location {
 
     /**

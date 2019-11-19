@@ -1,4 +1,4 @@
-package org.wahlzeit.model;
+package org.wahlzeit.model.coordinates;
 
 public abstract class AbstractCoordinate implements Coordinate {
 
