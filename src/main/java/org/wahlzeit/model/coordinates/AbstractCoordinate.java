@@ -9,12 +9,13 @@ public abstract class AbstractCoordinate implements Coordinate {
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
 
+        assertClassInvariants();
+
         CartesianCoordinate result = doAsCartesianCoordinate();
 
         assert result != null;
-        assertIsNotNaN(result.getX());
-        assertIsNotNaN(result.getY());
-        assertIsNotNaN(result.getZ());
+
+        assertClassInvariants();
 
         return result;
     }
@@ -48,12 +49,13 @@ public abstract class AbstractCoordinate implements Coordinate {
     @Override
     public SphericCoordinate asSphericCoordinate() {
 
+        assertClassInvariants();
+
         SphericCoordinate result = doAsSphericCoordinate();
 
         assert result != null;
-        assertIsNotNaN(result.getPhi());
-        assertIsNotNaN(result.getTheta());
-        assertIsNotNaN(result.getRadius());
+
+        assertClassInvariants();
 
         return result;
     }
@@ -116,4 +118,6 @@ public abstract class AbstractCoordinate implements Coordinate {
         if(Double.isNaN(d))
             throw new ArithmeticException("Double was NaN!");
     }
+
+    protected abstract void assertClassInvariants();
 }

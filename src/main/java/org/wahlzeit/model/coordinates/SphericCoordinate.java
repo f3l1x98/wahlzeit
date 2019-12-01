@@ -37,7 +37,11 @@ public class SphericCoordinate extends AbstractCoordinate {
      * @methodtype set
      */
     public void setPhi(double phi) {
+        assertClassInvariants();
+
         this.phi = normalize(phi);
+
+        assertClassInvariants();
     }
 
     /**
@@ -51,7 +55,11 @@ public class SphericCoordinate extends AbstractCoordinate {
      * @methodtype set
      */
     public void setTheta(double theta) {
+        assertClassInvariants();
+
         this.theta = normalize(theta);
+
+        assertClassInvariants();
     }
 
     /**
@@ -65,7 +73,11 @@ public class SphericCoordinate extends AbstractCoordinate {
      * @methodtype set
      */
     public void setRadius(double radius) {
+        assertClassInvariants();
+
         this.radius = radius;
+
+        assertClassInvariants();
     }
 
     @Override
@@ -79,6 +91,14 @@ public class SphericCoordinate extends AbstractCoordinate {
     @Override
     public SphericCoordinate doAsSphericCoordinate() {
         return this;
+    }
+
+    @Override
+    protected void assertClassInvariants() {
+        // assert all variables are not NaN
+        assert !Double.isNaN(this.getPhi()) && !Double.isNaN(this.getTheta()) && !Double.isNaN(this.getRadius());
+        // assert phi and theta are normalized (0 <= phi, theta < 2 * PI)
+        assert this.getPhi() < (2 * Math.PI) && this.getTheta() < (2 * Math.PI);
     }
 
     @Override

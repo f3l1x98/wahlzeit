@@ -30,7 +30,11 @@ public class CartesianCoordinate extends AbstractCoordinate {
      * @methodtype set
      */
     public void setX(double x) {
+        assertClassInvariants();
+
         this.x = x;
+
+        assertClassInvariants();
     }
 
     /**
@@ -44,7 +48,11 @@ public class CartesianCoordinate extends AbstractCoordinate {
      * @methodtype set
      */
     public void setY(double y) {
+        assertClassInvariants();
+
         this.y = y;
+
+        assertClassInvariants();
     }
 
     /**
@@ -58,7 +66,11 @@ public class CartesianCoordinate extends AbstractCoordinate {
      * @methodtype set
      */
     public void setZ(double z) {
+        assertClassInvariants();
+
         this.z = z;
+
+        assertClassInvariants();
     }
 
     @Override
@@ -76,6 +88,12 @@ public class CartesianCoordinate extends AbstractCoordinate {
             theta = 0;
 
         return new SphericCoordinate(phi, theta, radius);
+    }
+
+    @Override
+    protected void assertClassInvariants() {
+        // assert all variables are not NaN
+        assert !Double.isNaN(this.getX()) && !Double.isNaN(this.getY()) && !Double.isNaN(this.getZ());
     }
 
     @Override
