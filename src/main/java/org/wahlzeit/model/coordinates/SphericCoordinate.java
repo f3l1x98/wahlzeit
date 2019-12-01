@@ -69,7 +69,7 @@ public class SphericCoordinate extends AbstractCoordinate {
     }
 
     @Override
-    public CartesianCoordinate asCartesianCoordinate() {
+    public CartesianCoordinate doAsCartesianCoordinate() {
         double x = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
         double y = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
         double z = this.radius * Math.cos(this.phi);
@@ -77,19 +77,8 @@ public class SphericCoordinate extends AbstractCoordinate {
     }
 
     @Override
-    public SphericCoordinate asSphericCoordinate() {
+    public SphericCoordinate doAsSphericCoordinate() {
         return this;
-    }
-
-    @Override
-    public boolean isEqual(Coordinate coordinate) {
-        if(coordinate == null) return false;
-        SphericCoordinate coord = coordinate.asSphericCoordinate();
-        if (this == coord) return true;
-        if (coord == null || this.getClass() != coord.getClass()) return false;
-        return AbstractCoordinate.doubleCompare(coord.phi, phi) &&
-                AbstractCoordinate.doubleCompare(coord.theta, theta) &&
-                AbstractCoordinate.doubleCompare(coord.radius, radius);
     }
 
     @Override

@@ -7,7 +7,19 @@ public abstract class AbstractCoordinate implements Coordinate {
      * @return Coordinate converted to CartesianCoordinate
      */
     @Override
-    public abstract CartesianCoordinate asCartesianCoordinate();
+    public CartesianCoordinate asCartesianCoordinate() {
+
+        CartesianCoordinate result = doAsCartesianCoordinate();
+
+        assert result != null;
+        assertIsNotNaN(result.getX());
+        assertIsNotNaN(result.getY());
+        assertIsNotNaN(result.getZ());
+
+        return result;
+    }
+
+    public abstract CartesianCoordinate doAsCartesianCoordinate();
 
     /**
      * Calculate Distance between itself and the given CartesianCoordinate
@@ -16,20 +28,37 @@ public abstract class AbstractCoordinate implements Coordinate {
      */
     @Override
     public double getCartesianDistance(Coordinate coordinate) {
-        if(coordinate == null) throw new IllegalArgumentException("Two points needed for calculation!");
+        assertIsNonNullArgument(coordinate);
+
         CartesianCoordinate thisCartesian = this.asCartesianCoordinate();
         CartesianCoordinate coord = coordinate.asCartesianCoordinate();
 
-        return Math.sqrt(
+        double result = Math.sqrt(
                 Math.pow((thisCartesian.getX() - coord.getX()), 2) + Math.pow((thisCartesian.getY() - coord.getY()), 2) + Math.pow((thisCartesian.getZ() - coord.getZ()), 2)
         );
+
+        assertIsNotNaN(result);
+
+        return result;
     }
 
     /**
      * @return Coordinate converted to SphericCoordinate
      */
     @Override
-    public abstract SphericCoordinate asSphericCoordinate();
+    public SphericCoordinate asSphericCoordinate() {
+
+        SphericCoordinate result = doAsSphericCoordinate();
+
+        assert result != null;
+        assertIsNotNaN(result.getPhi());
+        assertIsNotNaN(result.getTheta());
+        assertIsNotNaN(result.getRadius());
+
+        return result;
+    }
+
+    public abstract SphericCoordinate doAsSphericCoordinate();
 
     /**
      * Calculate central angle between the @param and this
@@ -38,7 +67,8 @@ public abstract class AbstractCoordinate implements Coordinate {
      */
     @Override
     public double getCentralAngle(Coordinate coordinate) {
-        if(coordinate == null) throw new IllegalArgumentException("Two points needed for calculation!");
+        assertIsNonNullArgument(coordinate);
+
         SphericCoordinate thisSpheric = this.asSphericCoordinate();
         SphericCoordinate thatSpheric = coordinate.asSphericCoordinate();
 
@@ -46,15 +76,44 @@ public abstract class AbstractCoordinate implements Coordinate {
 
         double cos = Math.sin(thisSpheric.getPhi()) * Math.sin(thatSpheric.getPhi()) + Math.cos(thisSpheric.getPhi()) * Math.cos(thatSpheric.getPhi()) * Math.cos(dtheta);
 
-        return Math.acos(cos);
+        double result = Math.acos(cos);
+
+        assertIsNotNaN(result);
+
+        return result;
     }
 
+    /**
+     * equals method for the subclasses of this abstract class,
+     * which compares the CartesianCoordinate representation of the two Coordinates
+     * @param coordinate Object this object is to be compared with
+     * @return true if these objects are the same
+     */
     @Override
-    public abstract boolean isEqual(Coordinate coordinate);
+    public boolean isEqual(Coordinate coordinate) {
+        assertIsNonNullArgument(coordinate);
+
+        CartesianCoordinate thatCoord = coordinate.asCartesianCoordinate();
+        CartesianCoordinate thisCoord = coordinate.asCartesianCoordinate();
+        if (this == thatCoord) return true;
+        return AbstractCoordinate.doubleCompare(thisCoord.getX(), thatCoord.getX()) &&
+                AbstractCoordinate.doubleCompare(thisCoord.getY(), thatCoord.getY()) &&
+                AbstractCoordinate.doubleCompare(thisCoord.getZ(), thatCoord.getZ());
+    }
 
 
     private static final double PRECISION = 1.0e-5;
     protected static boolean doubleCompare(double d1, double d2) {
         return Math.abs(d1 - d2) < PRECISION;
+    }
+
+    protected void assertIsNonNullArgument(Object c) {
+        if(c == null)
+            throw new IllegalArgumentException("Argument must not be null!");
+    }
+
+    protected void assertIsNotNaN(double d) {
+        if(Double.isNaN(d))
+            throw new ArithmeticException("Double was NaN!");
     }
 }

@@ -1,6 +1,5 @@
 package org.wahlzeit.model.coordinates;
 
-import java.lang.Math;
 import java.util.Objects;
 
 public class CartesianCoordinate extends AbstractCoordinate {
@@ -63,7 +62,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
     }
 
     @Override
-    public SphericCoordinate asSphericCoordinate() {
+    public SphericCoordinate doAsSphericCoordinate() {
         double radius = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
         double phi = Math.acos(
                 this.z / radius
@@ -80,24 +79,8 @@ public class CartesianCoordinate extends AbstractCoordinate {
     }
 
     @Override
-    public CartesianCoordinate asCartesianCoordinate() {
+    public CartesianCoordinate doAsCartesianCoordinate() {
         return this;
-    }
-
-    /**
-     * equals method for this class
-     * @param coordinate Object this object is to be compared with
-     * @return true if these objects are the same
-     */
-    @Override
-    public boolean isEqual(Coordinate coordinate) {
-        if(coordinate == null) return false;
-        CartesianCoordinate coord = coordinate.asCartesianCoordinate();
-        if (this == coord) return true;
-        if (coord == null || this.getClass() != coord.getClass()) return false;
-        return AbstractCoordinate.doubleCompare(coord.x, x) &&
-                AbstractCoordinate.doubleCompare(coord.y, y) &&
-                AbstractCoordinate.doubleCompare(coord.z, z);
     }
 
     @Override
