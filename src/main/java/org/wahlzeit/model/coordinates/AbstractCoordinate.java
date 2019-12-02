@@ -28,7 +28,7 @@ public abstract class AbstractCoordinate implements Coordinate {
      * @return euclidean Distance in double
      */
     @Override
-    public double getCartesianDistance(Coordinate coordinate) {
+    public double getCartesianDistance(Coordinate coordinate) throws IllegalArgumentException, ArithmeticException {
         assertIsNonNullArgument(coordinate);
 
         CartesianCoordinate thisCartesian = this.asCartesianCoordinate();
@@ -68,7 +68,7 @@ public abstract class AbstractCoordinate implements Coordinate {
      * @return central angle
      */
     @Override
-    public double getCentralAngle(Coordinate coordinate) {
+    public double getCentralAngle(Coordinate coordinate) throws IllegalArgumentException, ArithmeticException {
         assertIsNonNullArgument(coordinate);
 
         SphericCoordinate thisSpheric = this.asSphericCoordinate();
@@ -92,7 +92,7 @@ public abstract class AbstractCoordinate implements Coordinate {
      * @return true if these objects are the same
      */
     @Override
-    public boolean isEqual(Coordinate coordinate) {
+    public boolean isEqual(Coordinate coordinate) throws IllegalArgumentException {
         assertIsNonNullArgument(coordinate);
 
         CartesianCoordinate thatCoord = coordinate.asCartesianCoordinate();
