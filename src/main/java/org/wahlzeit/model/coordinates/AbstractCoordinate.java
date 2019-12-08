@@ -92,7 +92,7 @@ public abstract class AbstractCoordinate implements Coordinate {
      * @return true if these objects are the same
      */
     @Override
-    public boolean isEqual(Coordinate coordinate) {
+    public boolean isEqual(Coordinate coordinate) throws IllegalArgumentException {
         assertIsNonNullArgument(coordinate);
 
         CartesianCoordinate thatCoord = coordinate.asCartesianCoordinate();
