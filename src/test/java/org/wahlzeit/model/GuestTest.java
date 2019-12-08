@@ -5,6 +5,7 @@ import com.googlecode.objectify.Work;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.testEnvironmentProvider.LocalDatastoreServiceTestConfigProvider;
 import org.wahlzeit.testEnvironmentProvider.RegisteredOfyEnvironmentProvider;
 
@@ -31,7 +32,11 @@ public class GuestTest {
 		ObjectifyService.run(new Work<Void>() {
 			@Override
 			public Void run() {
-				new User("1337", "han", "star@wa.rs");
+				try {
+					new User("1337", "han", "star@wa.rs");
+				} catch (InitializeException e) {
+					e.printStackTrace();
+				}
 				return null;
 			}
 		});
@@ -48,7 +53,12 @@ public class GuestTest {
 		Guest testGuest = ObjectifyService.run(new Work<Guest>() {
 			@Override
 			public Guest run() {
-				return new Guest();
+				try {
+					return new Guest();
+				} catch (InitializeException e) {
+					e.printStackTrace();
+					return null;
+				}
 			}
 		});
 		String userName = testGuest.getId();

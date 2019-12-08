@@ -22,12 +22,8 @@ package org.wahlzeit.model;
 
 import org.wahlzeit.services.ObjectManager;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The photo case manager provides access to and manages persistent photo cases.
@@ -92,10 +88,14 @@ public class PhotoCaseManager extends ObjectManager {
 	/**
 	 * @methodtype command
 	 */
-	public void addPhotoCase(PhotoCase myCase) {
+	public void addPhotoCase(PhotoCase myCase) throws IOException {
 		openPhotoCases.put(myCase.getId(), myCase);
 		if (myCase.isDirty()) {
-			writeObject(myCase);
+			try{
+				writeObject(myCase);
+			}catch (IOException e){
+				throw new IOException("Failed to save new PhotoCase");
+			}
 		}
 		// @FIXME Main.saveGlobals();
 	}
@@ -111,9 +111,13 @@ public class PhotoCaseManager extends ObjectManager {
 	/**
 	 * @methodtype command
 	 */
-	public void savePhotoCases() {
+	public void savePhotoCases() throws IOException {
 		if (openPhotoCases != null && openPhotoCases.size() > 0) {
-			updateObjects(openPhotoCases.values());
+			try{
+				updateObjects(openPhotoCases.values());
+			} catch (IOException e) {
+				throw new IOException("Failed to save Photocases");
+			}
 		}
 	}
 

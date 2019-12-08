@@ -22,6 +22,7 @@ package org.wahlzeit.servlets;
 
 import org.wahlzeit.main.ServiceMain;
 import org.wahlzeit.model.UserSession;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.Session;
 import org.wahlzeit.services.SessionManager;
@@ -80,7 +81,12 @@ public abstract class AbstractServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-		UserSession us = ensureUserSession(request);
+		UserSession us = null;
+		try {
+			us = ensureUserSession(request);
+		} catch (InitializeException e) {
+			throw new ServletException("Failed to ensure UserSession!");
+		}
 		SessionManager.setThreadLocalSession(us);
 
 		if (ServiceMain.getInstance().isShuttingDown() || (us == null)) {
@@ -99,7 +105,12 @@ public abstract class AbstractServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-		UserSession us = ensureUserSession(request);
+		UserSession us = null;
+		try {
+			us = ensureUserSession(request);
+		} catch (InitializeException e) {
+			throw new ServletException("Failed to ensure UserSession!");
+		}
 		SessionManager.setThreadLocalSession(us);
 
 		if (ServiceMain.getInstance().isShuttingDown() || (us == null)) {
@@ -122,13 +133,18 @@ public abstract class AbstractServlet extends HttpServlet {
 	/**
 	 *
 	 */
-	protected UserSession ensureUserSession(HttpServletRequest request) {
+	protected UserSession ensureUserSession(HttpServletRequest request) throws InitializeException {
 		HttpSession httpSession = request.getSession();
 
 		String sessionName = httpSession.getId();
 		String siteUrl = getSiteUrl(request); // @TODO Application
 
-		UserSession result = new UserSession(sessionName, siteUrl, httpSession, request.getLocale().getLanguage());
+		UserSession result = null;
+		try {
+			result = new UserSession(sessionName, siteUrl, httpSession, request.getLocale().getLanguage());
+		} catch (InitializeException e) {
+			throw new InitializeException("Failed to init UserSession!");
+		}
 
 		return result;
 	}

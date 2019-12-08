@@ -27,6 +27,7 @@ import org.wahlzeit.model.AccessRights;
 import org.wahlzeit.model.EnglishModelConfig;
 import org.wahlzeit.model.GermanModelConfig;
 import org.wahlzeit.model.LanguageConfigs;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.ConfigDir;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.LogBuilder;
@@ -232,7 +233,7 @@ public class ServiceMain extends ModelMain {
 					URL url = getClass().getClassLoader().getResource(PICTURES_PATH);
 					File file = new File(url.getPath());
 					createUser("robot","Mr. Robot","robot@ecorp.com",file.getAbsolutePath());
-				} catch (NullPointerException e) {
+				} catch (NullPointerException | InitializeException e) {
 					log.warning("Unable to create default user");
 				}
 			}

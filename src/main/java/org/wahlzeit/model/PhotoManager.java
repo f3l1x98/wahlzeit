@@ -23,6 +23,7 @@ package org.wahlzeit.model;
 import com.google.appengine.api.images.Image;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
+import org.wahlzeit.model.exceptions.ImageIOException;
 import org.wahlzeit.model.persistence.ImageStorage;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.ObjectManager;
@@ -30,14 +31,7 @@ import org.wahlzeit.services.Persistent;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -143,7 +137,7 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 * @methodtype init Loads all Photos from the Datastore and holds them in the cache
 	 */
-	public void init() {
+	public void init() throws IOException{
 		loadPhotos();
 	}
 
@@ -166,7 +160,11 @@ public class PhotoManager extends ObjectManager {
 			if (!doHasPhoto(photo.getId())) {
 				log.config(LogBuilder.createSystemMessage().
 						addParameter("Load Photo with ID", photo.getIdAsString()).toString());
-				loadScaledImages(photo);
+				try {
+					loadScaledImages(photo);
+				} catch (IOException e) {
+					log.warning(LogBuilder.createSystemMessage().addMessage("Failed to load Image for Photo with ID: " + photo.getId().stringValue).toString());
+				}
 				doAddPhoto(photo);
 			} else {
 				log.config(LogBuilder.createSystemMessage().
@@ -190,7 +188,7 @@ public class PhotoManager extends ObjectManager {
 	 *
 	 * Loads all scaled Images of this Photo from Google Cloud Storage
 	 */
-	protected void loadScaledImages(Photo photo) {
+	protected void loadScaledImages(Photo photo) throws ImageIOException {
 		String photoIdAsString = photo.getId().asString();
 		ImageStorage imageStorage = ImageStorage.getInstance();
 
@@ -210,6 +208,7 @@ public class PhotoManager extends ObjectManager {
 							addParameter("size", photoSize.asString()).
 							addParameter("photo ID", photoIdAsString).
 							addException("Could not load image although it exists", e).toString());
+					throw new ImageIOException("Failed to load Image");
 				}
 			} else {
 				log.config(LogBuilder.createSystemMessage().
@@ -221,12 +220,16 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 *
 	 */
-	public void savePhoto(Photo photo) {
-		updateObject(photo);
+	public void savePhoto(Photo photo) throws ImageIOException {
+		try {
+			updateObject(photo);
+		} catch (IOException e) {
+			throw new ImageIOException("Failed to save Photo");
+		}
 	}
 
 	@Override
-	protected void updateDependents(Persistent obj) {
+	protected void updateDependents(Persistent obj) throws IllegalArgumentException, IOException {
 		if (obj instanceof Photo) {
 			Photo photo = (Photo) obj;
 			saveScaledImages(photo);
@@ -251,7 +254,7 @@ public class PhotoManager extends ObjectManager {
 	 * Persists all available sizes of the Photo. If one size exceeds the limit of the persistence layer, e.g. > 1MB for
 	 * the Datastore, it is simply not persisted.
 	 */
-	protected void saveScaledImages(Photo photo) {
+	protected void saveScaledImages(Photo photo) throws ImageIOException {
 		String photoIdAsString = photo.getId().asString();
 		ImageStorage imageStorage = ImageStorage.getInstance();
 		PhotoSize photoSize;
@@ -270,6 +273,7 @@ public class PhotoManager extends ObjectManager {
 					log.warning(LogBuilder.createSystemMessage().
 							addException("Problem when storing image", e).toString());
 					moreSizesExist = false;
+					throw new ImageIOException("Failed to save Photo");
 				}
 			} else {
 				log.config(LogBuilder.createSystemMessage().
@@ -283,7 +287,7 @@ public class PhotoManager extends ObjectManager {
 	 * Removes all tags of the Photo (obj) in the datastore that have been removed by the user and adds all new tags of
 	 * the photo to the datastore.
 	 */
-	protected void updateTags(Photo photo) {
+	protected void updateTags(Photo photo) throws IOException, IllegalArgumentException {
 		// delete all existing tags, for the case that some have been removed
 		deleteObjects(Tag.class, Tag.PHOTO_ID, photo.getId().asString());
 
@@ -300,8 +304,12 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 *
 	 */
-	public void savePhotos() throws IOException{
-		updateObjects(photoCache.values());
+	public void savePhotos() throws ImageIOException{
+		try {
+			updateObjects(photoCache.values());
+		} catch (IOException e) {
+			throw new ImageIOException("Failed to save Photos");
+		}
 	}
 
 	/**
@@ -346,7 +354,7 @@ public class PhotoManager extends ObjectManager {
 	/**
 	 * @methodtype command
 	 */
-	public void addPhoto(Photo photo) throws IOException {
+	public void addPhoto(Photo photo) throws ImageIOException, IllegalStateException {
 		PhotoId id = photo.getId();
 		assertIsNewPhoto(id);
 		doAddPhoto(photo);

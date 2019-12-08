@@ -21,6 +21,7 @@
 package org.wahlzeit.model;
 
 import com.googlecode.objectify.annotation.Subclass;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.EmailAddress;
 
 /**
@@ -32,15 +33,19 @@ public class Moderator extends User {
 	/**
 	 *
 	 */
-	public Moderator(String id, String myName, String myEmailAddress, Client previousClient) {
+	public Moderator(String id, String myName, String myEmailAddress, Client previousClient) throws InitializeException {
 		this(id, myName, EmailAddress.getFromString(myEmailAddress), previousClient);
 	}
 
 	/**
 	 *
 	 */
-	public Moderator(String userId, String nickname, EmailAddress emailAddress, Client previousClient) {
-		initialize(userId, nickname, emailAddress, AccessRights.MODERATOR, previousClient);
+	public Moderator(String userId, String nickname, EmailAddress emailAddress, Client previousClient) throws InitializeException {
+		try {
+			initialize(userId, nickname, emailAddress, AccessRights.MODERATOR, previousClient);
+		} catch (InitializeException e) {
+			throw new InitializeException("Failed to init Moderator");
+		}
 	}
 
 	/**

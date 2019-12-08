@@ -22,6 +22,7 @@ package org.wahlzeit.model;
 
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
+import org.wahlzeit.model.exceptions.ClientIOException;
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.mailing.EmailService;
@@ -90,7 +91,11 @@ public class UserManager extends ClientManager {
 
 				for (User user : existingUser) {
 					if (!hasClientById(user.getId())) {
-						doAddClient(user);
+						try {
+							doAddClient(user);
+						} catch (ClientIOException e) {
+							log.severe(LogBuilder.createSystemMessage().addMessage("Failed to add user").toString());
+						}
 					} else {
 						log.config(LogBuilder.createSystemMessage().addParameter("user has been loaded", user.getId())
 								.toString());
@@ -145,7 +150,11 @@ public class UserManager extends ClientManager {
 		if (result != null) {
 			User current = getUserById(result.getId());
 			if (current == null) {
-				doAddClient(result);
+				try {
+					doAddClient(result);
+				} catch (ClientIOException e) {
+					log.warning(LogBuilder.createSystemMessage().addMessage("Failed to add user").toString());
+				}
 			} else {
 				result = current;
 			}

@@ -23,6 +23,7 @@ package org.wahlzeit.services;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -129,23 +130,28 @@ public abstract class ObjectManager {
 	/**
 	 * Updates all entities of the given collection in the datastore.
 	 */
-	protected void updateObjects(Collection<? extends Persistent> collection) {
+	protected void updateObjects(Collection<? extends Persistent> collection) throws IOException {
 		for (Persistent object : collection) {
-			updateObject(object);
+			try {
+				updateObject(object);
+			}catch (IOException e) {
+				throw new IOException("Failed to update Object: " + object.toString());
+			}
 		}
 	}
 
 	/**
 	 * Updates the given entity in the datastore.
 	 */
-	protected void updateObject(Persistent object) {
+	protected void updateObject(Persistent object) throws IOException
+	{
 		writeObject(object);
 	}
 
 	/**
 	 * Writes the given entity to the datastore.
 	 */
-	protected void writeObject(Persistent object) {
+	protected void writeObject(Persistent object) throws IOException {
 		assertIsNonNullArgument(object, "object");
 
 		if (object.isDirty()) {
@@ -163,7 +169,7 @@ public abstract class ObjectManager {
 	/**
 	 * Updates all dependencies of the object.
 	 */
-	protected void updateDependents(Persistent object) {
+	protected void updateDependents(Persistent object) throws IOException {
 		// overwrite if your object has additional dependencies
 	}
 

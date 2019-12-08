@@ -20,13 +20,8 @@
 
 package org.wahlzeit.handlers;
 
-import org.wahlzeit.model.AccessRights;
-import org.wahlzeit.model.ModelConfig;
-import org.wahlzeit.model.Photo;
-import org.wahlzeit.model.PhotoManager;
-import org.wahlzeit.model.User;
-import org.wahlzeit.model.UserManager;
-import org.wahlzeit.model.UserSession;
+import org.wahlzeit.model.*;
+import org.wahlzeit.model.exceptions.ClientIOException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.mailing.EmailService;
 import org.wahlzeit.services.mailing.EmailServiceManager;
@@ -67,7 +62,7 @@ public class SendEmailFormHandler extends AbstractWebFormHandler {
 	/**
 	 *
 	 */
-	protected String doHandleGet(UserSession us, String link, Map args) {
+	protected String doHandleGet(UserSession us, String link, Map args) throws ClientIOException {
 		if (!(us.getClient() instanceof User)) {
 			us.setHeading(us.getClient().getLanguageConfiguration().getInformation());
 			us.setMessage(us.getClient().getLanguageConfiguration().getNeedToSignupFirst());

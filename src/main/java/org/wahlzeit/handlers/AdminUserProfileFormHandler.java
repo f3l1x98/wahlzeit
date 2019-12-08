@@ -20,13 +20,8 @@
 
 package org.wahlzeit.handlers;
 
-import org.wahlzeit.model.AccessRights;
-import org.wahlzeit.model.Gender;
-import org.wahlzeit.model.Photo;
-import org.wahlzeit.model.User;
-import org.wahlzeit.model.UserManager;
-import org.wahlzeit.model.UserSession;
-import org.wahlzeit.model.UserStatus;
+import org.wahlzeit.model.*;
+import org.wahlzeit.model.exceptions.ClientIOException;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.HtmlUtil;
@@ -102,7 +97,11 @@ public class AdminUserProfileFormHandler extends AbstractWebFormHandler {
 		// TODO user.setEmailAddress(EmailAddress.getFromString(emailAddress));
 		user.setNotifyAboutPraise((notifyAboutPraise != null) && notifyAboutPraise.equals("on"));
 
-		um.removeClient(user);
+		try {
+			um.removeClient(user);
+		} catch (ClientIOException e) {
+			log.severe(LogBuilder.createSystemMessage().addMessage("Failed to remove Client").toString());
+		}
 		user = um.getUserById(userId);
 		us.setSavedArg("userId", userId);
 

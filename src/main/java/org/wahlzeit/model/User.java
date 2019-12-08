@@ -23,15 +23,12 @@ package org.wahlzeit.model;
 import com.google.appengine.api.images.Image;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Subclass;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.LogBuilder;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -85,29 +82,33 @@ public class User extends Client {
 	/**
 	 *
 	 */
-	public User(String id, String myName, String myEmailAddress) {
+	public User(String id, String myName, String myEmailAddress) throws InitializeException {
 		this(id, myName, EmailAddress.getFromString(myEmailAddress), null);
 	}
 
 	/**
 	 *
 	 */
-	public User(String id, String myName, String myEmailAddress, Client previousClient) {
+	public User(String id, String myName, String myEmailAddress, Client previousClient) throws InitializeException {
 		this(id, myName, EmailAddress.getFromString(myEmailAddress), previousClient);
 	}
 
 	/**
 	 *
 	 */
-	public User(String id, String nickname, EmailAddress emailAddress, Client previousClient) {
-		initialize(id, nickname, emailAddress, AccessRights.USER, previousClient);
+	public User(String id, String nickname, EmailAddress emailAddress, Client previousClient) throws InitializeException {
+		try{
+			initialize(id, nickname, emailAddress, AccessRights.USER, previousClient);
+		} catch (InitializeException e) {
+			throw new InitializeException("Failed to init User");
+		}
 	}
 
 	/**
 	 * @methodtype initialization
 	 */
 	protected void initialize(String id, String nickName, EmailAddress emailAddress, AccessRights accessRights,
-							  Client previousClient) {
+							  Client previousClient) throws InitializeException {
 		super.initialize(id, nickName, emailAddress, accessRights, previousClient);
 
 		log.config(LogBuilder.createSystemMessage().

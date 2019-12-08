@@ -2,12 +2,9 @@ package org.wahlzeit.handlers;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import org.wahlzeit.model.AccessRights;
-import org.wahlzeit.model.Administrator;
-import org.wahlzeit.model.Client;
-import org.wahlzeit.model.User;
-import org.wahlzeit.model.UserManager;
-import org.wahlzeit.model.UserSession;
+import org.wahlzeit.model.*;
+import org.wahlzeit.model.exceptions.ClientIOException;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.webparts.WebPart;
 
@@ -53,7 +50,11 @@ public class LoginFormHandler extends AbstractWebFormHandler {
 			User user = userManager.getUserById(userId);
 			if (user != null) {
 				// Wahlzeit user already exists
-				us.setClient(user);
+				try {
+					us.setClient(user);
+				} catch (ClientIOException e) {
+					log.severe(LogBuilder.createSystemMessage().addMessage("Failed to set User").toString());
+				}
 				log.config(LogBuilder.createSystemMessage().
 						addMessage("Wahlzeit user exists").
 						addParameter("id", user.getId()).toString());
@@ -63,13 +64,21 @@ public class LoginFormHandler extends AbstractWebFormHandler {
 				String nickName = googleUser.getNickname();
 
 				Client previousClient = us.getClient();
-				if (userService.isUserAdmin()) {
-					user = new Administrator(userId, nickName, emailAddress, previousClient);
-				} else {
-					user = new User(userId, nickName, emailAddress, previousClient);
+				try {
+					if (userService.isUserAdmin()) {
+						user = new Administrator(userId, nickName, emailAddress, previousClient);
+					} else {
+						user = new User(userId, nickName, emailAddress, previousClient);
+					}
+				} catch (InitializeException e) {
+					log.severe(LogBuilder.createSystemMessage().addMessage("Failed to init User").toString());
 				}
 				userManager.emailWelcomeMessage(us, user);
-				us.setClient(user);
+				try {
+					us.setClient(user);
+				} catch (ClientIOException e) {
+					log.severe(LogBuilder.createSystemMessage().addMessage("Failed to set User").toString());
+				}
 
 				log.info(LogBuilder.createUserMessage().addAction("Signup").toString());
 			}

@@ -6,10 +6,9 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 import org.wahlzeit.services.LogBuilder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public class WaterfallPhotoManager extends PhotoManager {
@@ -56,7 +55,11 @@ public class WaterfallPhotoManager extends PhotoManager {
             if (!doHasPhoto(photo.getId())) {
                 log.config(LogBuilder.createSystemMessage().
                         addParameter("Load WaterfallPhoto with ID", photo.getIdAsString()).toString());
-                loadScaledImages(photo);
+                try {
+                    loadScaledImages(photo);
+                } catch (IOException e) {
+                    log.warning(LogBuilder.createSystemMessage().addMessage("Failed to load Image for Photo with ID: " + photo.getId().stringValue).toString());
+                }
                 doAddPhoto(photo);
             } else {
                 log.config(LogBuilder.createSystemMessage().

@@ -3,11 +3,8 @@ package org.wahlzeit.testEnvironmentProvider;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 import org.junit.rules.ExternalResource;
-import org.wahlzeit.model.EnglishModelConfig;
-import org.wahlzeit.model.GermanModelConfig;
-import org.wahlzeit.model.Guest;
-import org.wahlzeit.model.LanguageConfigs;
-import org.wahlzeit.model.UserSession;
+import org.wahlzeit.model.*;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.SessionManager;
 
@@ -36,7 +33,12 @@ public class UserSessionProvider extends ExternalResource {
 		String guestName = ObjectifyService.run(new Work<String>() {
 			@Override
 			public String run() {
-				Guest guest = new Guest();
+				Guest guest = null;
+				try {
+					guest = new Guest();
+				} catch (InitializeException e) {
+					e.printStackTrace();
+				}
 				guest.setLanguage(Language.ENGLISH);
 				return guest.getId();
 			}

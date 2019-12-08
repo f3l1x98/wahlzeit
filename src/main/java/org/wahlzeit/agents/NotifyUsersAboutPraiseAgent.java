@@ -1,13 +1,8 @@
 package org.wahlzeit.agents;
 
 import com.google.apphosting.api.ApiProxy;
-import org.wahlzeit.model.LanguageConfigs;
-import org.wahlzeit.model.ModelConfig;
-import org.wahlzeit.model.Photo;
-import org.wahlzeit.model.PhotoId;
-import org.wahlzeit.model.PhotoManager;
-import org.wahlzeit.model.User;
-import org.wahlzeit.model.UserManager;
+import org.wahlzeit.model.*;
+import org.wahlzeit.model.exceptions.ImageIOException;
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.services.mailing.EmailService;
@@ -58,7 +53,11 @@ public class NotifyUsersAboutPraiseAgent extends Agent {
 					arrayListOfPhotos.add(photo);
 					ownerIdPhotosMap.put(ownerId, arrayListOfPhotos);
 					photo.setNoNewPraise();
-					PhotoManager.getInstance().savePhoto(photo);
+					try{
+						PhotoManager.getInstance().savePhoto(photo);
+					} catch (ImageIOException e) {
+						log.warning(LogBuilder.createUserMessage().addMessage("Failed to save Photo!").toString());
+					}
 				}
 			}
 		}

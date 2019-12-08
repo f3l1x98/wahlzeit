@@ -21,6 +21,7 @@
 package org.wahlzeit.model;
 
 import com.googlecode.objectify.annotation.Subclass;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.EmailAddress;
 
 /**
@@ -37,17 +38,25 @@ public class Guest extends Client {
 	/**
 	 *
 	 */
-	public Guest() {
+	public Guest() throws InitializeException {
 		String userId = GUEST_PREFIX + UserManager.getInstance().getNextClientId();
-		initialize(userId, userId, EmailAddress.EMPTY, AccessRights.GUEST, null);
+		try {
+			initialize(userId, userId, EmailAddress.EMPTY, AccessRights.GUEST, null);
+		} catch (InitializeException e){
+			throw new InitializeException("Failed to init Guest");
+		}
 	}
 
 	/**
 	 * For logging out a user, some settings like the language or the photo size should not change, therefore the
 	 * previousClient is used so set these basic settings in the new <@link>Guest</@link>.
 	 */
-	public Guest(Client previousClient) {
+	public Guest(Client previousClient) throws InitializeException {
 		String userId = GUEST_PREFIX + UserManager.getInstance().getNextClientId();
-		initialize(userId, userId, EmailAddress.EMPTY, AccessRights.GUEST, previousClient);
+		try {
+			initialize(userId, userId, EmailAddress.EMPTY, AccessRights.GUEST, previousClient);
+		} catch (InitializeException e){
+			throw new InitializeException("Failed to init Guest");
+		}
 	}
 }

@@ -29,7 +29,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setX(double x) {
+    public void setX(double x) throws IllegalArgumentException {
         assertClassInvariants();
 
         this.x = x;
@@ -47,7 +47,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setY(double y) {
+    public void setY(double y) throws IllegalArgumentException{
         assertClassInvariants();
 
         this.y = y;
@@ -65,7 +65,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setZ(double z) {
+    public void setZ(double z) throws IllegalArgumentException {
         assertClassInvariants();
 
         this.z = z;

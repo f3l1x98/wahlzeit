@@ -36,7 +36,7 @@ public class SphericCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setPhi(double phi) {
+    public void setPhi(double phi) throws IllegalArgumentException {
         assertClassInvariants();
 
         this.phi = normalize(phi);
@@ -54,7 +54,7 @@ public class SphericCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setTheta(double theta) {
+    public void setTheta(double theta) throws IllegalArgumentException {
         assertClassInvariants();
 
         this.theta = normalize(theta);
@@ -72,7 +72,7 @@ public class SphericCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setRadius(double radius) {
+    public void setRadius(double radius) throws IllegalArgumentException {
         assertClassInvariants();
 
         this.radius = radius;

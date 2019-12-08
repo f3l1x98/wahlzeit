@@ -20,14 +20,9 @@
 
 package org.wahlzeit.handlers;
 
-import org.wahlzeit.model.AccessRights;
-import org.wahlzeit.model.ModelConfig;
-import org.wahlzeit.model.Photo;
-import org.wahlzeit.model.PhotoId;
-import org.wahlzeit.model.PhotoManager;
-import org.wahlzeit.model.User;
-import org.wahlzeit.model.UserManager;
-import org.wahlzeit.model.UserSession;
+import org.wahlzeit.model.*;
+import org.wahlzeit.model.exceptions.ClientIOException;
+import org.wahlzeit.model.exceptions.ImageIOException;
 import org.wahlzeit.services.LogBuilder;
 import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.utils.StringUtil;
@@ -103,17 +98,36 @@ public class ShowUserPhotoFormHandler extends AbstractWebFormHandler {
 			result = PartUtil.TELL_FRIEND_PAGE_NAME;
 		} else if (us.isFormType(args, "select")) {
 			user.setUserPhoto(photo);
-			us.setClient(user);
-			userManager.saveClient(user);
+			try {
+				us.setClient(user);
+			} catch (ClientIOException e) {
+				log.severe(LogBuilder.createUserMessage().addMessage("Failed to set user").toString());
+				log.severe(LogBuilder.createSystemMessage().addMessage("Failed to set user").toString());
+			}
+			try {
+				userManager.saveClient(user);
+			} catch (ClientIOException e) {
+				log.severe(LogBuilder.createUserMessage().addMessage("Failed to save user").toString());
+				log.severe(LogBuilder.createSystemMessage().addMessage("Failed to save user").toString());
+			}
 			log.info(LogBuilder.createUserMessage().
 					addAction("Select user photo").
 					addParameter("Photo", id).toString());
 		} else if (us.isFormType(args, "delete")) {
 			photo.setStatus(photo.getStatus().asDeleted(true));
-			PhotoManager.getInstance().savePhoto(photo);
+			try{
+				PhotoManager.getInstance().savePhoto(photo);
+			} catch (ImageIOException e) {
+				log.warning(LogBuilder.createUserMessage().addMessage("Failed to save Photo!").toString());
+			}
 			if (user.getUserPhoto() == photo) {
 				user.setUserPhoto(null);
-				userManager.saveClient(user);
+				try {
+					userManager.saveClient(user);
+				} catch (ClientIOException e) {
+					log.severe(LogBuilder.createUserMessage().addMessage("Failed to set user").toString());
+					log.severe(LogBuilder.createSystemMessage().addMessage("Failed to set user").toString());
+				}
 			}
 			log.info(LogBuilder.createUserMessage().
 					addAction("Deselect user photo").toString());

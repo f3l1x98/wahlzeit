@@ -20,11 +20,9 @@
 
 package org.wahlzeit.handlers;
 
-import org.wahlzeit.model.AccessRights;
-import org.wahlzeit.model.Client;
-import org.wahlzeit.model.Guest;
-import org.wahlzeit.model.ModelConfig;
-import org.wahlzeit.model.UserSession;
+import org.wahlzeit.model.*;
+import org.wahlzeit.model.exceptions.ClientIOException;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.utils.HtmlUtil;
 import org.wahlzeit.webparts.WebPart;
 
@@ -46,9 +44,14 @@ public class LogoutPageHandler extends AbstractWebPageHandler {
 	/**
 	 *
 	 */
-	protected String doHandleGet(UserSession us, String link, Map args) {
+	protected String doHandleGet(UserSession us, String link, Map args) throws ClientIOException {
 		Client previousClient = us.getClient();
-		us.setClient(new Guest(previousClient));
+		try {
+			Client newC = new Guest(previousClient);
+			us.setClient(newC);
+		} catch (ClientIOException | InitializeException e) {
+			throw new ClientIOException("Failed to logout");
+		}
 		us.clearSavedArgs();
 		return link;
 	}

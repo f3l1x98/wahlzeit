@@ -25,6 +25,8 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Parent;
+import org.wahlzeit.model.exceptions.ClientIOException;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.EmailAddress;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.ObjectManager;
@@ -88,7 +90,7 @@ public abstract class Client implements Serializable, Persistent {
 	 * @methodtype initialization
 	 */
 	protected void initialize(String id, String nickName, EmailAddress emailAddress, AccessRights accessRights,
-							  Client previousClient) {
+							  Client previousClient) throws InitializeException {
 		this.id = id;
 		this.nickName = nickName;
 		this.accessRights = accessRights;
@@ -103,7 +105,11 @@ public abstract class Client implements Serializable, Persistent {
 
 		incWriteCount();
 
-		UserManager.getInstance().addClient(this);
+		try{
+			UserManager.getInstance().addClient(this);
+		} catch (ClientIOException e) {
+			throw new InitializeException("Failed to Initialize Client");
+		}
 	}
 
 	/**

@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+import org.wahlzeit.model.exceptions.ClientIOException;
+import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.Language;
 import org.wahlzeit.services.Session;
 import org.wahlzeit.utils.HtmlUtil;
@@ -61,14 +63,18 @@ public class UserSession extends Session implements Serializable {
 	/**
 	 *
 	 */
-	public UserSession(String myName, String mySiteUrl, HttpSession myHttpSession, String myLanguage) {
+	public UserSession(String myName, String mySiteUrl, HttpSession myHttpSession, String myLanguage) throws InitializeException {
 		httpSession = myHttpSession;
 		initialize(myName);
 		if (httpSession.getAttribute(INITIALIZED) == null) {
 			httpSession.setAttribute(SITE_URL, mySiteUrl);
 			httpSession.setAttribute(PHOTO_FILTER, PhotoFactory.getInstance().createPhotoFilter());
 
-			setClient(new Guest());
+			try {
+				setClient(new Guest());
+			} catch (ClientIOException e){
+				throw new InitializeException("Failed to init UserSession");
+			}
 			try {
 				Language language = Language.getFromIsoCode(myLanguage);
 				getClient().setLanguage(language);
@@ -154,7 +160,7 @@ public class UserSession extends Session implements Serializable {
 	/**
 	 * @methodtype set
 	 */
-	public void setClient(Client newClient) {
+	public void setClient(Client newClient) throws ClientIOException {
 		String previousClientId = (String) httpSession.getAttribute(CLIENT_ID);
 		if (previousClientId != null) {
 			Client previousClient = UserManager.getInstance().getClientById(previousClientId);
