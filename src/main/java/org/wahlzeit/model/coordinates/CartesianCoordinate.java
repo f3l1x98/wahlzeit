@@ -55,7 +55,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
         CartesianCoordinate result = allCartesianCoordinates.get(cart.hashCode());
 
         if(result == null) {
-            synchronized (this) {
+            synchronized (allCartesianCoordinates) {
                 result = allCartesianCoordinates.get(cart.hashCode());
                 if (result == null) {
                     result = cart;
@@ -86,7 +86,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
         CartesianCoordinate result = allCartesianCoordinates.get(cart.hashCode());
 
         if(result == null) {
-            synchronized (this) {
+            synchronized (allCartesianCoordinates) {
                 result = allCartesianCoordinates.get(cart.hashCode());
                 if (result == null) {
                     result = cart;
@@ -117,7 +117,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
         CartesianCoordinate result = allCartesianCoordinates.get(cart.hashCode());
 
         if(result == null) {
-            synchronized (this) {
+            synchronized (allCartesianCoordinates) {
                 result = allCartesianCoordinates.get(cart.hashCode());
                 if (result == null) {
                     result = cart;

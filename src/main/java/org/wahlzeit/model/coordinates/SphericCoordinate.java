@@ -66,7 +66,7 @@ public class SphericCoordinate extends AbstractCoordinate {
         SphericCoordinate result = allSphericCoordinates.get(cart.hashCode());
 
         if(result == null) {
-            synchronized (this) {
+            synchronized (allSphericCoordinates) {
                 result = allSphericCoordinates.get(cart.hashCode());
                 if (result == null) {
                     result = cart;
@@ -99,7 +99,7 @@ public class SphericCoordinate extends AbstractCoordinate {
         SphericCoordinate result = allSphericCoordinates.get(cart.hashCode());
 
         if(result == null) {
-            synchronized (this) {
+            synchronized (allSphericCoordinates) {
                 result = allSphericCoordinates.get(cart.hashCode());
                 if (result == null) {
                     result = cart;
@@ -130,7 +130,7 @@ public class SphericCoordinate extends AbstractCoordinate {
         SphericCoordinate result = allSphericCoordinates.get(cart.hashCode());
 
         if(result == null) {
-            synchronized (this) {
+            synchronized (allSphericCoordinates) {
                 result = allSphericCoordinates.get(cart.hashCode());
                 if (result == null) {
                     result = cart;
