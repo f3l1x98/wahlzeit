@@ -2,21 +2,16 @@ package org.wahlzeit.model.coordinates;
 
 import org.junit.Test;
 import org.wahlzeit.model.Location;
-import org.wahlzeit.model.coordinates.AbstractCoordinate;
-import org.wahlzeit.model.coordinates.CartesianCoordinate;
-import org.wahlzeit.model.coordinates.SphericCoordinate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SphericCoordinateTest {
 
     @Test
     public void testIsEqual() {
-        SphericCoordinate coord1 = new SphericCoordinate(1, 2, 3);
-        SphericCoordinate coord2 = new SphericCoordinate(1.0, 2.0, 3.0);
-        SphericCoordinate coord3 = new SphericCoordinate((1.0 + (Math.PI * 2)), (2.0 + (Math.PI * 2) * 2), 3.0);
+        SphericCoordinate coord1 = SphericCoordinate.createSphericCoordinate(1, 2, 3);
+        SphericCoordinate coord2 = SphericCoordinate.createSphericCoordinate(1.0, 2.0, 3.0);
+        SphericCoordinate coord3 = SphericCoordinate.createSphericCoordinate((1.0 + (Math.PI * 2)), (2.0 + (Math.PI * 2) * 2), 3.0);
 
         assertTrue(coord1.isEqual(coord2));
         assertTrue(coord1.isEqual(coord1));
@@ -25,9 +20,9 @@ public class SphericCoordinateTest {
 
     @Test
     public void testEquals() {
-        SphericCoordinate coord1 = new SphericCoordinate(1, 2, 3);
-        SphericCoordinate coord2 = new SphericCoordinate(1.0, 2.0, 3.0);
-        SphericCoordinate coord3 = new SphericCoordinate((1.0 + (Math.PI * 2)), (2.0 + (Math.PI * 2) * 2), 3.0);
+        SphericCoordinate coord1 = SphericCoordinate.createSphericCoordinate(1, 2, 3);
+        SphericCoordinate coord2 = SphericCoordinate.createSphericCoordinate(1.0, 2.0, 3.0);
+        SphericCoordinate coord3 = SphericCoordinate.createSphericCoordinate((1.0 + (Math.PI * 2)), (2.0 + (Math.PI * 2) * 2), 3.0);
 
         assertTrue(coord1.equals(coord2));
         assertTrue(coord1.equals(coord1));
@@ -39,19 +34,19 @@ public class SphericCoordinateTest {
     @Test
     public void testAsCartesianCoordiante() {
 
-        SphericCoordinate sphericCoordinate = new SphericCoordinate(0, 0, 1);
-        SphericCoordinate sphericCoordinate2 = new SphericCoordinate(30, 60, 5);
+        SphericCoordinate sphericCoordinate = SphericCoordinate.createSphericCoordinate(0, 0, 1);
+        SphericCoordinate sphericCoordinate2 = SphericCoordinate.createSphericCoordinate(30, 60, 5);
 
         CartesianCoordinate coordinate = sphericCoordinate.asCartesianCoordinate();
         CartesianCoordinate coordinate2 = sphericCoordinate2.asCartesianCoordinate();
 
-        assertEquals(coordinate, new CartesianCoordinate(0,0,1));
-        assertEquals(coordinate2, new CartesianCoordinate(4.705070719233549, 1.5058126650418855, 0.7712572494379202));
+        assertEquals(coordinate, CartesianCoordinate.createCartesianCoordinate(0,0,1));
+        assertEquals(coordinate2, CartesianCoordinate.createCartesianCoordinate(4.705070719233549, 1.5058126650418855, 0.7712572494379202));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetCentralAngleNull() {
-        SphericCoordinate coord1 = new SphericCoordinate(1, 0, 0);
+        SphericCoordinate coord1 = SphericCoordinate.createSphericCoordinate(1, 0, 0);
 
         coord1.getCentralAngle(null);
     }
@@ -59,7 +54,7 @@ public class SphericCoordinateTest {
     @Test
     public void testGetCentralAngleSameCoordinate() {
 
-        SphericCoordinate coordinate = new SphericCoordinate(Math.PI, Math.PI, 10);
+        SphericCoordinate coordinate = SphericCoordinate.createSphericCoordinate(Math.PI, Math.PI, 10);
 
         double angle = coordinate.getCentralAngle(coordinate);
 
@@ -69,8 +64,8 @@ public class SphericCoordinateTest {
     @Test
     public void testGetCentralAngleSameTheta() {
 
-        SphericCoordinate thisSpheric = new SphericCoordinate(Math.PI, Math.PI, 10);
-        SphericCoordinate thatSpheric = new SphericCoordinate(2 * Math.PI, Math.PI, 10);
+        SphericCoordinate thisSpheric = SphericCoordinate.createSphericCoordinate(Math.PI, Math.PI, 10);
+        SphericCoordinate thatSpheric = SphericCoordinate.createSphericCoordinate(2 * Math.PI, Math.PI, 10);
 
         double angle = thisSpheric.getCentralAngle(thatSpheric);
 
@@ -81,8 +76,8 @@ public class SphericCoordinateTest {
     @Test
     public void testGetCentralAngleSamePhi() {
 
-        SphericCoordinate thisSpheric = new SphericCoordinate(Math.PI, Math.PI, 10);
-        SphericCoordinate thatSpheric = new SphericCoordinate(Math.PI, 2 * Math.PI, 10);
+        SphericCoordinate thisSpheric = SphericCoordinate.createSphericCoordinate(Math.PI, Math.PI, 10);
+        SphericCoordinate thatSpheric = SphericCoordinate.createSphericCoordinate(Math.PI, 2 * Math.PI, 10);
 
         double angle = thisSpheric.getCentralAngle(thatSpheric);
 
@@ -93,9 +88,9 @@ public class SphericCoordinateTest {
     @Test
     public void testGetCentralAngle() {
 
-        SphericCoordinate thisSpheric = new SphericCoordinate(Math.PI / 2, Math.PI / 2, 10);
-        SphericCoordinate thatSpheric = new SphericCoordinate(Math.PI, Math.PI, 10);
-        SphericCoordinate thatSpheric2 = new SphericCoordinate( 2, 1.2, 10);
+        SphericCoordinate thisSpheric = SphericCoordinate.createSphericCoordinate(Math.PI / 2, Math.PI / 2, 10);
+        SphericCoordinate thatSpheric = SphericCoordinate.createSphericCoordinate(Math.PI, Math.PI, 10);
+        SphericCoordinate thatSpheric2 = SphericCoordinate.createSphericCoordinate( 2, 1.2, 10);
 
         double angle = thisSpheric.getCentralAngle(thatSpheric);
         double angle2 = thisSpheric.getCentralAngle(thatSpheric2);

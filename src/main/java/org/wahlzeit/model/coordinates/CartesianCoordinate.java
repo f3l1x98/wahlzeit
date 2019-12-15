@@ -13,10 +13,29 @@ public class CartesianCoordinate extends AbstractCoordinate {
     /**
      * @methodtype constructor
      */
-    public CartesianCoordinate(double x, double y, double z) {
+    private CartesianCoordinate(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public static CartesianCoordinate createCartesianCoordinate(double x, double y, double z) {
+
+        CartesianCoordinate cart = new CartesianCoordinate(x, y, z);
+
+        CartesianCoordinate result = allCartesianCoordinates.get(cart.hashCode());
+
+        if(result == null) {
+            synchronized (allCartesianCoordinates) {
+                result = allCartesianCoordinates.get(cart.hashCode());
+                if (result == null) {
+                    result = cart;
+                    allCartesianCoordinates.put(cart.hashCode(), cart);
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -29,12 +48,25 @@ public class CartesianCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setX(double x) throws AssertionError {
+    public CartesianCoordinate setX(double x) throws AssertionError {
         assertClassInvariants();
 
-        this.x = x;
+        CartesianCoordinate cart = new CartesianCoordinate(x, this.y, this.z);
+        CartesianCoordinate result = allCartesianCoordinates.get(cart.hashCode());
+
+        if(result == null) {
+            synchronized (this) {
+                result = allCartesianCoordinates.get(cart.hashCode());
+                if (result == null) {
+                    result = cart;
+                    allCartesianCoordinates.put(cart.hashCode(), cart);
+                }
+            }
+        }
 
         assertClassInvariants();
+
+        return result;
     }
 
     /**
@@ -47,12 +79,25 @@ public class CartesianCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setY(double y) throws AssertionError{
+    public CartesianCoordinate setY(double y) throws AssertionError{
         assertClassInvariants();
 
-        this.y = y;
+        CartesianCoordinate cart = new CartesianCoordinate(this.x, y, this.z);
+        CartesianCoordinate result = allCartesianCoordinates.get(cart.hashCode());
+
+        if(result == null) {
+            synchronized (this) {
+                result = allCartesianCoordinates.get(cart.hashCode());
+                if (result == null) {
+                    result = cart;
+                    allCartesianCoordinates.put(cart.hashCode(), cart);
+                }
+            }
+        }
 
         assertClassInvariants();
+
+        return result;
     }
 
     /**
@@ -65,12 +110,25 @@ public class CartesianCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setZ(double z) throws AssertionError {
+    public CartesianCoordinate setZ(double z) throws AssertionError {
         assertClassInvariants();
 
-        this.z = z;
+        CartesianCoordinate cart = new CartesianCoordinate(this.x, this.y, z);
+        CartesianCoordinate result = allCartesianCoordinates.get(cart.hashCode());
+
+        if(result == null) {
+            synchronized (this) {
+                result = allCartesianCoordinates.get(cart.hashCode());
+                if (result == null) {
+                    result = cart;
+                    allCartesianCoordinates.put(cart.hashCode(), cart);
+                }
+            }
+        }
 
         assertClassInvariants();
+
+        return result;
     }
 
     @Override
@@ -87,7 +145,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
         if(Double.isNaN(theta))
             theta = 0;
 
-        return new SphericCoordinate(phi, theta, radius);
+        return SphericCoordinate.createSphericCoordinate(phi, theta, radius);
     }
 
     @Override

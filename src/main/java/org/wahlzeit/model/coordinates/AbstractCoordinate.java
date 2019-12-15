@@ -1,7 +1,12 @@
 package org.wahlzeit.model.coordinates;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class AbstractCoordinate implements Coordinate {
 
+    final static Map<Integer, CartesianCoordinate> allCartesianCoordinates = new HashMap<>();
+    final static Map<Integer, SphericCoordinate> allSphericCoordinates = new HashMap<>();
 
     /**
      * @return Coordinate converted to CartesianCoordinate
@@ -103,6 +108,10 @@ public abstract class AbstractCoordinate implements Coordinate {
                 AbstractCoordinate.doubleCompare(thisCoord.getZ(), thatCoord.getZ());
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return this;
+    }
 
     private static final double PRECISION = 1.0e-5;
     protected static boolean doubleCompare(double d1, double d2) {

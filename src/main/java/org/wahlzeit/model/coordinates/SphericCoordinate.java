@@ -20,11 +20,32 @@ public class SphericCoordinate extends AbstractCoordinate {
     /**
      * @methodtype constructor
      */
-    public SphericCoordinate(double phi, double theta, double radius) {
+    private SphericCoordinate(double phi, double theta, double radius) {
         this.phi = normalize(phi);
         this.theta = normalize(theta);
         this.radius = radius;
     }
+
+    public static SphericCoordinate createSphericCoordinate(double phi, double theta, double radius) {
+
+        SphericCoordinate cart = new SphericCoordinate(phi, theta, radius);
+
+        SphericCoordinate result = allSphericCoordinates.get(cart.hashCode());
+
+        if(result == null) {
+            synchronized (allSphericCoordinates) {
+                result = allSphericCoordinates.get(cart.hashCode());
+                if (result == null) {
+                    result = cart;
+                    allSphericCoordinates.put(cart.hashCode(), cart);
+                }
+            }
+        }
+
+        return result;
+    }
+
+
 
     /**
      * @methodtype get
@@ -36,12 +57,27 @@ public class SphericCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setPhi(double phi) throws AssertionError {
+    public SphericCoordinate setPhi(double phi) throws AssertionError {
         assertClassInvariants();
 
-        this.phi = normalize(phi);
+        phi = normalize(phi);
+
+        SphericCoordinate cart = new SphericCoordinate(phi, this.theta, this.radius);
+        SphericCoordinate result = allSphericCoordinates.get(cart.hashCode());
+
+        if(result == null) {
+            synchronized (this) {
+                result = allSphericCoordinates.get(cart.hashCode());
+                if (result == null) {
+                    result = cart;
+                    allSphericCoordinates.put(cart.hashCode(), cart);
+                }
+            }
+        }
 
         assertClassInvariants();
+
+        return result;
     }
 
     /**
@@ -54,12 +90,27 @@ public class SphericCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setTheta(double theta) throws AssertionError {
+    public SphericCoordinate setTheta(double theta) throws AssertionError {
         assertClassInvariants();
 
-        this.theta = normalize(theta);
+        theta = normalize(theta);
+
+        SphericCoordinate cart = new SphericCoordinate(this.phi, theta, this.radius);
+        SphericCoordinate result = allSphericCoordinates.get(cart.hashCode());
+
+        if(result == null) {
+            synchronized (this) {
+                result = allSphericCoordinates.get(cart.hashCode());
+                if (result == null) {
+                    result = cart;
+                    allSphericCoordinates.put(cart.hashCode(), cart);
+                }
+            }
+        }
 
         assertClassInvariants();
+
+        return result;
     }
 
     /**
@@ -72,12 +123,25 @@ public class SphericCoordinate extends AbstractCoordinate {
     /**
      * @methodtype set
      */
-    public void setRadius(double radius) throws AssertionError {
+    public SphericCoordinate setRadius(double radius) throws AssertionError {
         assertClassInvariants();
 
-        this.radius = radius;
+        SphericCoordinate cart = new SphericCoordinate(this.phi, this.theta, radius);
+        SphericCoordinate result = allSphericCoordinates.get(cart.hashCode());
+
+        if(result == null) {
+            synchronized (this) {
+                result = allSphericCoordinates.get(cart.hashCode());
+                if (result == null) {
+                    result = cart;
+                    allSphericCoordinates.put(cart.hashCode(), cart);
+                }
+            }
+        }
 
         assertClassInvariants();
+
+        return result;
     }
 
     @Override
@@ -85,7 +149,8 @@ public class SphericCoordinate extends AbstractCoordinate {
         double x = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
         double y = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
         double z = this.radius * Math.cos(this.phi);
-        return new CartesianCoordinate(x, y, z);
+
+        return CartesianCoordinate.createCartesianCoordinate(x, y, z);
     }
 
     @Override
