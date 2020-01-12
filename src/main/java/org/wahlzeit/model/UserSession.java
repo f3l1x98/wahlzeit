@@ -20,6 +20,7 @@
 
 package org.wahlzeit.model;
 
+import org.wahlzeit.annotations.PatternInstance;
 import org.wahlzeit.model.exceptions.ClientIOException;
 import org.wahlzeit.model.exceptions.InitializeException;
 import org.wahlzeit.services.Language;
@@ -39,6 +40,12 @@ import java.util.logging.Logger;
  *
  * {@link HttpSession}s are managed automatically by Google App Engine.
  */
+@PatternInstance(
+		patternName = "Adapter",
+		participants = {
+				"UserSession", "Session"
+		}
+)
 public class UserSession extends Session implements Serializable {
 
 	/**

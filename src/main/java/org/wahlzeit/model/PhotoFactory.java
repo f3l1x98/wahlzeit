@@ -31,9 +31,8 @@ import java.util.logging.Logger;
 @PatternInstance(
 		patternName = "Abstract Factory",
 		participants = {
-				"AbstractFactory", "ConcreteFactory"
+				"Photo", "PhotoFactory"
 		}
-
 )
 public class PhotoFactory {
 

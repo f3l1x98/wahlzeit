@@ -4,6 +4,7 @@ package org.wahlzeit.model;
 import com.google.appengine.api.images.Image;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
+import org.wahlzeit.annotations.PatternInstance;
 import org.wahlzeit.services.LogBuilder;
 
 import java.io.IOException;
@@ -11,6 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+@PatternInstance(
+        patternName = "Singleton",
+        participants = {
+                "WaterfallPhotoManager"
+        }
+)
 public class WaterfallPhotoManager extends PhotoManager {
 
     private static final Logger log = Logger.getLogger(WaterfallPhotoManager.class.getName());

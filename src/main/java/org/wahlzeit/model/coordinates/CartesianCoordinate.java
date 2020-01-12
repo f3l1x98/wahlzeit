@@ -1,7 +1,15 @@
 package org.wahlzeit.model.coordinates;
 
+import org.wahlzeit.annotations.PatternInstance;
+
 import java.util.Objects;
 
+@PatternInstance(
+        patternName = "Flyweight",
+        participants = {
+                "AbstractCoordinate", "SphericCoordinate", "CartesianCoordinate"
+        }
+)
 public class CartesianCoordinate extends AbstractCoordinate {
 
     private double x;

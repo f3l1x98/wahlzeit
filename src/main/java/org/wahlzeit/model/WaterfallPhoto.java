@@ -1,9 +1,16 @@
 package org.wahlzeit.model;
 
 import com.googlecode.objectify.annotation.Subclass;
+import org.wahlzeit.annotations.PatternInstance;
 
 import java.util.Objects;
 
+@PatternInstance(
+        patternName = "Abstract Factory",
+        participants = {
+                "WaterfallPhoto", "WaterfallPhotoFactory"
+        }
+)
 @Subclass
 public class WaterfallPhoto extends Photo {
 
