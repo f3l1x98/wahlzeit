@@ -79,6 +79,16 @@ public class WaterfallType extends DataObject {
         subTypes.add(wt);
     }
 
+    public boolean isSubtype(WaterfallType type) {
+        assert (type != null);
+        if(type == this) return false;
+        for(WaterfallType t : subTypes) {
+            if(t.isSubtype(type))
+                return true;
+        }
+        return false;
+    }
+
     public boolean hasInstance(Waterfall waterfall) {
         assert (waterfall != null);
         if (waterfall.getType() == this) {

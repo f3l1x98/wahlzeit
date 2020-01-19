@@ -19,6 +19,19 @@ public class WaterfallManagerTest {
         }
     }
 
+    @Test(expected = AssertionError.class)
+    public void testCreateWaterfallInvalidType() {
+        try {
+            WaterfallManager wm = WaterfallManager.getInstance();
+            Waterfall waterfall = wm.createWaterfall("BliBlaBlub");
+
+            fail();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
     @Test
     public void testCreateWaterfallType() {
         try {
