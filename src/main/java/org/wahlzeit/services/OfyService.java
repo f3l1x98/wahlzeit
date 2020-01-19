@@ -5,6 +5,8 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import org.wahlzeit.model.*;
 import org.wahlzeit.model.persistence.DatastoreAdapter.ImageWrapper;
+import org.wahlzeit.model.waterfall.Waterfall;
+import org.wahlzeit.model.waterfall.WaterfallType;
 
 /**
  * A badly named class, to be renamed to ObjectifyService first, something better later.
@@ -19,6 +21,8 @@ public class OfyService {
 	static {
 		factory().register(Photo.class);
 		factory().register(WaterfallPhoto.class);
+		factory().register(Waterfall.class);
+		factory().register(WaterfallType.class);
 		factory().register(Globals.class);
 		factory().register(Tag.class);
 		factory().register(User.class);

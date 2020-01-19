@@ -3,10 +3,12 @@ package org.wahlzeit.model;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
+import org.wahlzeit.model.waterfall.WaterfallManager;
 import org.wahlzeit.testEnvironmentProvider.LocalDatastoreServiceTestConfigProvider;
 import org.wahlzeit.testEnvironmentProvider.RegisteredOfyEnvironmentProvider;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class WaterfallPhotoTest {
 
@@ -15,29 +17,31 @@ public class WaterfallPhotoTest {
             outerRule(new LocalDatastoreServiceTestConfigProvider()).
             around(new RegisteredOfyEnvironmentProvider());
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNegativeSetStage() {
-        WaterfallPhoto photo = new WaterfallPhoto();
+    @Test
+    public void testEqualsTrue() {
+        WaterfallPhoto photo1 = new WaterfallPhoto();
+        WaterfallPhoto photo2 = new WaterfallPhoto();
 
-        photo.setStages(-1);
-    }
+        photo2.setWaterfall(WaterfallManager.getInstance().createWaterfall("Waterfall"));
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testZeroSetStage() {
-        WaterfallPhoto photo = new WaterfallPhoto();
-
-        photo.setStages(0);
+        assertEquals(photo1, photo1);
+        assertEquals(photo2, photo2);
     }
 
     @Test
-    public void testPositiveSetStage() {
+    public void testEqualsFalse() {
+        WaterfallPhoto photo1 = new WaterfallPhoto();
+        WaterfallPhoto photo2 = new WaterfallPhoto();
+
+        photo2.setWaterfall(WaterfallManager.getInstance().createWaterfall("Waterfall"));
+
+        assertNotEquals(photo1, photo2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetWaterfallNull() {
         WaterfallPhoto photo = new WaterfallPhoto();
 
-        int first = photo.getStages();
-        photo.setStages(2);
-        int second = photo.getStages();
-
-        assertEquals(first, 1);
-        assertNotEquals(first, second);
+        photo.setWaterfall(null);
     }
 }

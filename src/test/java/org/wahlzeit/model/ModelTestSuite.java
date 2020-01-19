@@ -5,6 +5,8 @@ import org.junit.runners.Suite;
 import org.wahlzeit.model.coordinates.CartesianCoordinateTest;
 import org.wahlzeit.model.coordinates.SphericCoordinateTest;
 import org.wahlzeit.model.persistence.DatastoreAdapterTest;
+import org.wahlzeit.model.waterfall.WaterfallManagerTest;
+import org.wahlzeit.model.waterfall.WaterfallTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -21,7 +23,9 @@ import org.wahlzeit.model.persistence.DatastoreAdapterTest;
         UserStatusTest.class,
         ValueTest.class,
         WaterfallPhotoManagerTest.class,
-        WaterfallPhotoTest.class
+        WaterfallPhotoTest.class,
+        WaterfallTest.class,
+        WaterfallManagerTest.class
 })
 public class ModelTestSuite {
 }

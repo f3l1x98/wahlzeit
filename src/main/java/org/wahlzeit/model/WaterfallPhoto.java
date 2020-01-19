@@ -2,6 +2,7 @@ package org.wahlzeit.model;
 
 import com.googlecode.objectify.annotation.Subclass;
 import org.wahlzeit.annotations.PatternInstance;
+import org.wahlzeit.model.waterfall.Waterfall;
 
 import java.util.Objects;
 
@@ -15,35 +16,33 @@ import java.util.Objects;
 public class WaterfallPhoto extends Photo {
 
     /**
-     * The Number of stages inside the waterfall stages >= 1
+     * The corresponding waterfall object, which has all waterfall specific attributes
      */
-    protected int stages;
+    protected Waterfall waterfall;
 
     public WaterfallPhoto() {
         super();
-        this.stages = 1;
     }
 
     public WaterfallPhoto(PhotoId myId) {
         super(myId);
-        this.stages = 1;
     }
 
-    public int getStages() {
-        return stages;
+    public Waterfall getWaterfall() {
+        return waterfall;
     }
 
-    public void setStages(int stages) {
-        if(stages < 1)
-            throw new IllegalArgumentException("A Waterfall has at least one stage!");
-        this.stages = stages;
+    public void setWaterfall(Waterfall waterfall) {
+        if(waterfall == null)
+            throw new IllegalArgumentException("Unable to set to null");
+        this.waterfall = waterfall;
         incWriteCount();
     }
 
     public boolean isEqual(WaterfallPhoto that) {
         if (this == that) return true;
         if (that == null || getClass() != that.getClass()) return false;
-        return stages == that.stages;
+        return waterfall == that.waterfall;
     }
 
     @Override
@@ -54,6 +53,6 @@ public class WaterfallPhoto extends Photo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(stages);
+        return Objects.hash(waterfall);
     }
 }
