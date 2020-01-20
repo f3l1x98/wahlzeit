@@ -1,10 +1,12 @@
 package org.wahlzeit.model.waterfall;
 
+import org.wahlzeit.services.ObjectManager;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class WaterfallManager {
+public class WaterfallManager extends ObjectManager {
 
     private static final Logger log = Logger.getLogger(WaterfallManager.class.getName());
 
